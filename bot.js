@@ -3,46 +3,78 @@ const client = new Discord.Client();
 client.on('ready', () => {
   console.log(`Hixxx online`);
 
-client.on('message', message => {
+const prefix = "o";
 
-    if(!message.channel.guild) return;
-if(message.content.startsWith('obc')) {
-if(!message.channel.guild) return message.channel.send('**هذا الأمر فقط للسيرفرات**').then(m => m.delete(5000));
-if(!message.member.hasPermission('ADMINISTRATOR')) return      message.channel.send('**للأسف لا تمتلك صلاحية** `ADMINISTRATOR`' );
-let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
-let copy = "RoadBot.";
-let request = `Requested By ${message.author.username}`;
-if (!args) return message.reply('**يجب عليك كتابة كلمة او جملة لإرسال البرودكاست**');message.channel.send(`**هل أنت متأكد من إرسالك البرودكاست؟ \nمحتوى البرودكاست:** \` ${args}\``).then(msg => {
-msg.react('✅')
-.then(() => msg.react('❌'))
-.then(() =>msg.react('✅'))
-
-let reaction1Filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id;
-let reaction2Filter = (reaction, user) => reaction.emoji.name === '❌' && user.id === message.author.id;
-let reaction1 = msg.createReactionCollector(reaction1Filter, { time: 12000 });
-let reaction2 = msg.createReactionCollector(reaction2Filter, { time: 12000 });
-reaction1.on("collect", r => {
-message.channel.send(`☑ |   ${message.guild.members.size} يتم ارسال البرودكاست الى عضو `).then(m => m.delete(5000));
-message.guild.members.forEach(m => {
-var bc = new
-Discord.RichEmbed()
-.setColor('RANDOM')
-.setTitle('Brodcast')
-.addField('**The Server**', message.guild.name)
-.addField('**The Sender**', message.author.username)
-.addField('**The Message**', args)
-.setThumbnail(message.author.avatarURL)
-.setFooter(copy, client.user.avatarURL);
-m.send({ embed: bc })
-msg.delete();
-})
-})
-reaction2.on("collect", r => {
-message.channel.send(`**Broadcast Canceled.**`).then(m => m.delete(5000));
-msg.delete();
-})
-})
+  
+  
+  client.on('message', message => {
+    if (message.author.id === client.user.id) return;
+    if (message.guild) {
+   let embed = new Discord.RichEmbed()
+    let args = message.content.split(' ').slice(1).join(' ');
+if(message.content.split(' ')[0] == prefix + 'bc1') {
+    if (!args[1]) {
+return;
 }
+        message.guild.members.forEach(m => {
+   if(!message.member.hasPermission('ADMINISTRATOR')) return;
+            var bc = new Discord.RichEmbed()
+            .addField(' » الرسالة : ', args)
+            .setColor('#ff0000')
+            // m.send(`[${m}]`);
+            m.send(`${m}`,{embed: bc});
+        });
+    }
+    } else {
+        return;
+    }
+}); ////////// Mal , Codes بوردكاست بدون امبد
+client.on('message', message => {
+if (message.author.id === client.user.id) return;
+if (message.guild) {
+let embed = new Discord.RichEmbed()
+let args = message.content.split(' ').slice(1).join(' ');
+if(message.content.split(' ')[0] == prefix + 'bc2') {
+if(!message.channel.guild) return message.reply('**:x: اسف لكن هذا الامر للسيرفرات فقط **');        
+if (!args[1]) {
+return;
+}
+  message.guild.members.forEach(m => {
+if(!message.member.hasPermission('ADMINISTRATOR')) return;
+      var bc = new Discord.RichEmbed()
+      .addField('# | الرسالة ', args)
+      .setThumbnail(message.guild.iconURL)
+      .setColor('RANDOM')
+      m.sendMessage(args)
+  });
+         if(!message.member.hasPermission('ADMINISTRATOR')) return message.reply(":x: **ليس لديك صلاحية للنشر هنا**");
+  const AziRo = new Discord.RichEmbed()  
+  .setColor('RANDOM')
+  message.channel.sendEmbed(AziRo);          
+}
+} else {
+  return;
+}
+}); /////////////// Mal , Codes بوردكاست للاونلاين فقط
+client.on("message", message => {
+ 
+            if (message.content.startsWith(prefix + "bc3")) {
+                         if (!message.member.hasPermission("ADMINISTRATOR"))  return;
+  let args = message.content.split(" ").slice(1);
+  var argresult = args.join(' ');
+  message.guild.members.filter(m => m.presence.status !== 'offline').forEach(m => {
+ m.send(`${argresult}\n ${m}`);
 })
+ message.channel.send(`\`${message.guild.members.filter(m => m.presence.status !== 'online').size}\` : عدد الاعضاء المستلمين`);
+ message.delete();
+};    
+});
+  
+  
+  
+  
+  
+  
+  
     
 client.login("التوكن" );
